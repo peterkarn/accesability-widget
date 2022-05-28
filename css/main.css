@@ -1,3 +1,4 @@
 .focusable:focus-visible {
-  outline: 2px solid #00bcd4;
+  outline: 3px solid #00bcd4;
+  background: #c996f2;
 }

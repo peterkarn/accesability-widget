@@ -1,19 +1,11 @@
-//https://www.npmjs.com/package/double-ended-queue
-// stack
-// queue
-
 (function () {
-  const keyTags = ['main', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'banner', 'complementary', 'contentinfo', 'form', 'main', 'navigation', 'search', 'anchor'];
-  const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-  const anchors = document.querySelectorAll('a');
-  const landmarks = document.querySelectorAll('main, banner, complementary, contentinfo, form, main, navigation, search, anchor, [role]');
   let isReversed = false;
 
   let currentHeading = 0;
   let currentLink = 0;
   let currentMark = 0;
 
-  let observer = new MutationObserver(getLandmarks);
+  let observer = new MutationObserver(() => getLandmarks());
 
   observer.observe(document.body, {
     childList: true,
@@ -21,17 +13,20 @@
     characterDataOldValue: true
   });
 
-  const filteredLandmarks = [...document.querySelectorAll('*')].filter(landmark => {
-    return keyTags.includes(landmark.tagName.toLowerCase()) || landmark.getAttribute('role');
-  });
-
-  filteredLandmarks.forEach(landmark => {
-    landmark.setAttribute('tabindex', '0');
-    landmark.classList.add('focusable');
-  });
-
   function getLandmarks() {
-    console.log('recalculate landmarks');
+    const keyMarks = {
+      anchors: document.querySelectorAll('a'),
+      headings: document.querySelectorAll('h1, h2, h3, h4, h5, h6'),
+      landmarks: document.querySelectorAll('header, main, nav, footer, search, [role="*"]')
+    }
+
+    for (let key in keyMarks) {
+      keyMarks[key].forEach(tag => {
+        tag.setAttribute('tabindex', '0');
+        tag.classList.add('focusable');
+      })
+    }
+    return keyMarks
   }
 
   function arrayIterator(arr, currentIndex) {
@@ -54,24 +49,22 @@
   }
 
   function switchHeadings() {
-    const headings = filteredLandmarks.filter(landmark => {
-      return headingTags.includes(landmark.tagName.toLowerCase())
-    });
+    const { headings } = getLandmarks();
     currentHeading = arrayIterator(headings, currentHeading);
     headings[currentHeading].focus();
   }
 
   function switchLinks() {
+    const {anchors} = getLandmarks();
     currentLink = arrayIterator(anchors, currentLink);
     anchors[currentLink].focus();
   }
 
   function switchMark() {
+    const { landmarks } = getLandmarks();
     currentMark = arrayIterator(landmarks, currentMark);
     landmarks[currentMark].focus();
   }
-
-  //key handlers
 
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName.toLowerCase() !== 'input') {
