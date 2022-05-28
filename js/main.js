@@ -5,12 +5,16 @@
   let currentLink = 0;
   let currentMark = 0;
 
+  let isFirstHeadingInput = true;
+  let isFirstLinkInput = true;
+  let isFirstMarkInput = true;
+
+
   let observer = new MutationObserver(() => getLandmarks());
 
   observer.observe(document.body, {
     childList: true,
     subtree: true,
-    characterDataOldValue: true
   });
 
   function getLandmarks() {
@@ -29,7 +33,9 @@
     return keyMarks
   }
 
-  function arrayIterator(arr, currentIndex) {
+  function arrayIterator(arr, currentIndex, isFirstInput) {
+
+    
     if (isReversed) {
       if (currentIndex === 0) {
         currentIndex = arr.length - 1;
@@ -45,24 +51,35 @@
         currentIndex++;
       }
     }
+
+    if (isFirstInput) {
+      if (isReversed) { 
+         return arr.length - 1;
+      }
+      return 0;
+    }
+
     return currentIndex;
   }
 
   function switchHeadings() {
     const { headings } = getLandmarks();
-    currentHeading = arrayIterator(headings, currentHeading);
+    currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
+    isFirstHeadingInput = false;
     headings[currentHeading].focus();
   }
 
   function switchLinks() {
-    const {anchors} = getLandmarks();
-    currentLink = arrayIterator(anchors, currentLink);
+    const { anchors } = getLandmarks();
+    currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
+    isFirstLinkInput = false;
     anchors[currentLink].focus();
   }
 
   function switchMark() {
     const { landmarks } = getLandmarks();
-    currentMark = arrayIterator(landmarks, currentMark);
+    currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
+    isFirstMarkInput = false;
     landmarks[currentMark].focus();
   }
 
@@ -85,4 +102,5 @@
     e.key === 'ArrowUp' ? isReversed = true : null;
     e.key === 'ArrowDown' ? isReversed = false : null;
   });
+
 })();
