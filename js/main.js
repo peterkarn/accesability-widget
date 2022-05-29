@@ -74,8 +74,6 @@
   function doubleEndedSwitcher(elements) {
     elements.switchElement();
   }
- 
-  // ========= double ended queue implementation =============
 
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName.toLowerCase() !== 'input') {
