@@ -1,10 +1,6 @@
 (function () {
   let isReversed = false;
 
-  // let currentHeading;
-  // let currentLink;
-  // let currentMark;
-
   let isFirstHeadingInput = true;
   let isFirstLinkInput = true;
   let isFirstMarkInput = true;
@@ -32,75 +28,6 @@
     return keyMarks
   }
 
-  // function arrayIterator(arr, currentIndex, isFirstInput) {
-
-  //   if (isReversed) {
-  //     if (currentIndex === 0) {
-  //       currentIndex = arr.length - 1;
-  //     } else {
-  //       currentIndex--;
-  //     }
-  //   }
-
-  //   if (!isReversed) {
-  //     if (currentIndex === arr.length - 1) {
-  //       currentIndex = 0;
-  //     } else {
-  //       currentIndex++;
-  //     }
-  //   }
-
-  //   if (isFirstInput) {
-  //     if (isReversed) { 
-  //        return arr.length - 1;
-  //     }
-  //     return 0;
-  //   }
-
-  //   return currentIndex;
-  // }
-
-  // function setElementFocus(arrayOfAlements, currentIndex) {
-  //   arrayOfAlements[currentIndex].focus();
-  //   arrayOfAlements[currentIndex].scrollIntoView({
-  //     block: 'center'
-  //   });
-  // }
-
-  // function switchHeadings() {
-  //   try {
-  //     const { headings } = getLandmarks();
-  //     currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
-  //     isFirstHeadingInput = false;
-  //     setElementFocus(headings, currentHeading);
-  //   } catch (error) {
-  //     alert('No headings found. Theeir devs are lazy.');
-  //   }
-  // }
-
-  // function switchLinks() {
-  //   try {
-  //     const { anchors } = getLandmarks();
-  //     currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
-  //     isFirstLinkInput = false;
-  //     setElementFocus(anchors, currentLink);
-  //   } catch (error) {
-  //     alert('No links found');
-  //   }
-  // }
-
-  // function switchMark() {
-  //   try {
-  //     const { landmarks } = getLandmarks();
-  //     currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
-  //     isFirstMarkInput = false;
-  //     setElementFocus(landmarks, currentMark);
-  //   } catch (error) {
-  //     alert('No landmarks found');
-  //   }
-  // }
-
-  // ========= double ended queue implementation =============
   class DoubleEndedQueue {
     constructor(arr, isFirstInput) {
       this.arr = arr;
@@ -117,12 +44,16 @@
       this.arr.unshift(el);
     }
 
+    focusAndShow() {
+      this.arr[0].focus();
+      this.arr[0].scrollIntoView();
+    }
+
     switchElement() {
-      if (this.isFirstInput) {
+      if (this.isFirstInput && !isReversed) {
         this.isFirstInput = false;
-        if (!isReversed) {
-          return this.arr[0];
-        }
+        this.focusAndShow();
+        return
       }
       if (!isReversed) { 
         this.firstToEnd();
@@ -130,7 +61,7 @@
       if (isReversed) {
         this.lastToStart();
       }
-      return this.arr[0];
+      this.focusAndShow();
     }
   }
 
@@ -139,10 +70,7 @@
   let deMarks = new DoubleEndedQueue([...getLandmarks().landmarks], isFirstMarkInput);
   
   function doubleEndedSwitcher(elements) {
-    elements.switchElement().focus();
-     elements.switchElement().scrollIntoView({
-      block: 'center'
-    });
+    elements.switchElement();
   }
  
   // ========= double ended queue implementation =============
@@ -150,28 +78,15 @@
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName.toLowerCase() !== 'input') {
       switch (e.key) {
-        // case 'h':
-        //   switchHeadings();
-        //   break;
-        // case 'l':
-        //   switchLinks();
-        //   break;
-        // case 'm':
-        //   switchMark();
-        //   break;
-        
-        // double ended queue implementation
-        case 'q': 
+        case 'h': 
           doubleEndedSwitcher(deHeadings);
           break;
-        case 'w':
+        case 'l':
           doubleEndedSwitcher(deLinks);
           break;
-        case 'e':
+        case 'm':
           doubleEndedSwitcher(deMarks);
           break;
-        // double ended queue implementation
-
       }
     }
   });
