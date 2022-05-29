@@ -1,14 +1,13 @@
 (function () {
   let isReversed = false;
 
-  let currentHeading = 0;
-  let currentLink = 0;
-  let currentMark = 0;
+  let currentHeading;
+  let currentLink;
+  let currentMark;
 
   let isFirstHeadingInput = true;
   let isFirstLinkInput = true;
   let isFirstMarkInput = true;
-
 
   let observer = new MutationObserver(() => getLandmarks());
 
@@ -35,7 +34,6 @@
 
   function arrayIterator(arr, currentIndex, isFirstInput) {
 
-    
     if (isReversed) {
       if (currentIndex === 0) {
         currentIndex = arr.length - 1;
@@ -62,25 +60,44 @@
     return currentIndex;
   }
 
+  function setElementFocus(arrayOfAlements, currentIndex) {
+    arrayOfAlements[currentIndex].focus();
+    arrayOfAlements[currentIndex].scrollIntoView({
+      block: 'center'
+    });
+  }
+
   function switchHeadings() {
-    const { headings } = getLandmarks();
-    currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
-    isFirstHeadingInput = false;
-    headings[currentHeading].focus();
+    try {
+      const { headings } = getLandmarks();
+      currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
+      isFirstHeadingInput = false;
+      setElementFocus(headings, currentHeading);
+    } catch (error) {
+      alert('No headings found. Theeir devs are lazy.');
+    }
   }
 
   function switchLinks() {
-    const { anchors } = getLandmarks();
-    currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
-    isFirstLinkInput = false;
-    anchors[currentLink].focus();
+    try {
+      const { anchors } = getLandmarks();
+      currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
+      isFirstLinkInput = false;
+      setElementFocus(anchors, currentLink);
+    } catch (error) {
+      alert('No links found');
+    }
   }
 
   function switchMark() {
-    const { landmarks } = getLandmarks();
-    currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
-    isFirstMarkInput = false;
-    landmarks[currentMark].focus();
+    try {
+      const { landmarks } = getLandmarks();
+      currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
+      isFirstMarkInput = false;
+      setElementFocus(landmarks, currentMark);
+    } catch (error) {
+      alert('No landmarks found');
+    }
   }
 
   document.addEventListener('keydown', (e) => {
@@ -102,5 +119,4 @@
     e.key === 'ArrowUp' ? isReversed = true : null;
     e.key === 'ArrowDown' ? isReversed = false : null;
   });
-
 })();

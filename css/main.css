@@ -1,4 +1,14 @@
+.focusable {
+  transition: transform 0.2s ease-in-out;
+  transform-origin: bottom left;
+}
+
 .focusable:focus-visible {
-  outline: 3px solid #00bcd4;
-  background: #c996f2;
+  outline: 3px solid #00bcd4 !important;
+  background: #c996f2 !important;
+  transform: scale(1.2);
+}
+
+a.focusable {
+  display: inline-block !important;
 }
