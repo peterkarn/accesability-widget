@@ -4,11 +4,9 @@
 }
 
 .focusable:focus-visible {
-  outline: 3px solid #00bcd4 !important;
-  background: #c996f2 !important;
-  transform: scale(1.2);
-}
-
-a.focusable {
-  display: inline-block !important;
+  outline: 5px solid yellow !important;
+  background: #0F60B6 !important;
+  color: #fff !important;
+  transform: scale(1.05);
+  z-index: 1000;
 }
