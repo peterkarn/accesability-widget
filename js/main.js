@@ -67,9 +67,9 @@
     }
   }
 
-  let deHeadings = new DoubleEndedElementSwitcher([...getLandmarks().headings], isFirstHeadingInput);
-  let deLinks = new DoubleEndedElementSwitcher([...getLandmarks().anchors], isFirstLinkInput);
-  let deMarks = new DoubleEndedElementSwitcher([...getLandmarks().landmarks], isFirstMarkInput);
+  let headings = new DoubleEndedElementSwitcher([...getLandmarks().headings], isFirstHeadingInput);
+  let links = new DoubleEndedElementSwitcher([...getLandmarks().anchors], isFirstLinkInput);
+  let marks = new DoubleEndedElementSwitcher([...getLandmarks().landmarks], isFirstMarkInput);
   
   function doubleEndedSwitcher(elements) {
     elements.switchElement();
@@ -79,13 +79,13 @@
     if (e.target.nodeName.toLowerCase() !== 'input') {
       switch (e.key) {
         case 'h': 
-          doubleEndedSwitcher(deHeadings);
+          doubleEndedSwitcher(headings);
           break;
         case 'l':
-          doubleEndedSwitcher(deLinks);
+          doubleEndedSwitcher(links);
           break;
         case 'm':
-          doubleEndedSwitcher(deMarks);
+          doubleEndedSwitcher(marks);
           break;
       }
     }
