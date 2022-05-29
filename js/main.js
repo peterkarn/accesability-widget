@@ -52,18 +52,22 @@
     }
 
     switchElement() {
-      if (this.isFirstInput && !isReversed) {
-        this.isFirstInput = false;
+      try {
+        if (this.isFirstInput && !isReversed) {
+          this.isFirstInput = false;
+          this.focusAndShow();
+          return
+        }
+        if (!isReversed) {
+          this.firstToEnd();
+        }
+        if (isReversed) {
+          this.lastToStart();
+        }
         this.focusAndShow();
-        return
+      } catch(err) {
+        alert('No such elements on page')
       }
-      if (!isReversed) { 
-        this.firstToEnd();
-      }
-      if (isReversed) {
-        this.lastToStart();
-      }
-      this.focusAndShow();
     }
   }
 
