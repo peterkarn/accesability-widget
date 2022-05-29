@@ -4,9 +4,11 @@
 }
 
 .focusable:focus-visible {
+  position: relative;
+  display: block;
   outline: 5px solid yellow !important;
   background: #0F60B6 !important;
   color: #fff !important;
-  transform: scale(1.05);
+  transform: scale(1.5);
   z-index: 1000;
 }
