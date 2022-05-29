@@ -28,7 +28,7 @@
     return keyMarks
   }
 
-  class DoubleEndedQueue {
+  class DoubleEndedElementSwitcher {
     constructor(arr, isFirstInput) {
       this.arr = arr;
       this.isFirstInput = isFirstInput;
@@ -46,7 +46,9 @@
 
     focusAndShow() {
       this.arr[0].focus();
-      this.arr[0].scrollIntoView();
+      this.arr[0].scrollIntoView({
+        block: 'center',
+      });
     }
 
     switchElement() {
@@ -65,9 +67,9 @@
     }
   }
 
-  let deHeadings = new DoubleEndedQueue([...getLandmarks().headings], isFirstHeadingInput);
-  let deLinks = new DoubleEndedQueue([...getLandmarks().anchors], isFirstLinkInput);
-  let deMarks = new DoubleEndedQueue([...getLandmarks().landmarks], isFirstMarkInput);
+  let deHeadings = new DoubleEndedElementSwitcher([...getLandmarks().headings], isFirstHeadingInput);
+  let deLinks = new DoubleEndedElementSwitcher([...getLandmarks().anchors], isFirstLinkInput);
+  let deMarks = new DoubleEndedElementSwitcher([...getLandmarks().landmarks], isFirstMarkInput);
   
   function doubleEndedSwitcher(elements) {
     elements.switchElement();
