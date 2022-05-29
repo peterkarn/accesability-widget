@@ -1,9 +1,9 @@
 (function () {
   let isReversed = false;
 
-  let currentHeading;
-  let currentLink;
-  let currentMark;
+  // let currentHeading;
+  // let currentLink;
+  // let currentMark;
 
   let isFirstHeadingInput = true;
   let isFirstLinkInput = true;
@@ -32,85 +32,146 @@
     return keyMarks
   }
 
-  function arrayIterator(arr, currentIndex, isFirstInput) {
+  // function arrayIterator(arr, currentIndex, isFirstInput) {
 
-    if (isReversed) {
-      if (currentIndex === 0) {
-        currentIndex = arr.length - 1;
-      } else {
-        currentIndex--;
-      }
+  //   if (isReversed) {
+  //     if (currentIndex === 0) {
+  //       currentIndex = arr.length - 1;
+  //     } else {
+  //       currentIndex--;
+  //     }
+  //   }
+
+  //   if (!isReversed) {
+  //     if (currentIndex === arr.length - 1) {
+  //       currentIndex = 0;
+  //     } else {
+  //       currentIndex++;
+  //     }
+  //   }
+
+  //   if (isFirstInput) {
+  //     if (isReversed) { 
+  //        return arr.length - 1;
+  //     }
+  //     return 0;
+  //   }
+
+  //   return currentIndex;
+  // }
+
+  // function setElementFocus(arrayOfAlements, currentIndex) {
+  //   arrayOfAlements[currentIndex].focus();
+  //   arrayOfAlements[currentIndex].scrollIntoView({
+  //     block: 'center'
+  //   });
+  // }
+
+  // function switchHeadings() {
+  //   try {
+  //     const { headings } = getLandmarks();
+  //     currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
+  //     isFirstHeadingInput = false;
+  //     setElementFocus(headings, currentHeading);
+  //   } catch (error) {
+  //     alert('No headings found. Theeir devs are lazy.');
+  //   }
+  // }
+
+  // function switchLinks() {
+  //   try {
+  //     const { anchors } = getLandmarks();
+  //     currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
+  //     isFirstLinkInput = false;
+  //     setElementFocus(anchors, currentLink);
+  //   } catch (error) {
+  //     alert('No links found');
+  //   }
+  // }
+
+  // function switchMark() {
+  //   try {
+  //     const { landmarks } = getLandmarks();
+  //     currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
+  //     isFirstMarkInput = false;
+  //     setElementFocus(landmarks, currentMark);
+  //   } catch (error) {
+  //     alert('No landmarks found');
+  //   }
+  // }
+
+  // ========= double ended queue implementation =============
+  class DoubleEndedQueue {
+    constructor(arr, isFirstInput) {
+      this.arr = arr;
+      this.isFirstInput = isFirstInput;
     }
 
-    if (!isReversed) {
-      if (currentIndex === arr.length - 1) {
-        currentIndex = 0;
-      } else {
-        currentIndex++;
-      }
+    firstToEnd() {
+      const el = this.arr.shift();
+      this.arr.push(el);
     }
 
-    if (isFirstInput) {
-      if (isReversed) { 
-         return arr.length - 1;
-      }
-      return 0;
+    lastToStart() {
+      const el = this.arr.pop();
+      this.arr.unshift(el);
     }
 
-    return currentIndex;
+    switchElement() {
+      if (this.isFirstInput) {
+        this.isFirstInput = false;
+        if (!isReversed) {
+          return this.arr[0];
+        }
+      }
+      if (!isReversed) { 
+        this.firstToEnd();
+      }
+      if (isReversed) {
+        this.lastToStart();
+      }
+      return this.arr[0];
+    }
   }
 
-  function setElementFocus(arrayOfAlements, currentIndex) {
-    arrayOfAlements[currentIndex].focus();
-    arrayOfAlements[currentIndex].scrollIntoView({
+  let deHeadings = new DoubleEndedQueue([...getLandmarks().headings], isFirstHeadingInput);
+  let deLinks = new DoubleEndedQueue([...getLandmarks().anchors], isFirstLinkInput);
+  let deMarks = new DoubleEndedQueue([...getLandmarks().landmarks], isFirstMarkInput);
+  
+  function doubleEndedSwitcher(elements) {
+    elements.switchElement().focus();
+     elements.switchElement().scrollIntoView({
       block: 'center'
     });
   }
-
-  function switchHeadings() {
-    try {
-      const { headings } = getLandmarks();
-      currentHeading = arrayIterator(headings, currentHeading, isFirstHeadingInput);
-      isFirstHeadingInput = false;
-      setElementFocus(headings, currentHeading);
-    } catch (error) {
-      alert('No headings found. Theeir devs are lazy.');
-    }
-  }
-
-  function switchLinks() {
-    try {
-      const { anchors } = getLandmarks();
-      currentLink = arrayIterator(anchors, currentLink, isFirstLinkInput);
-      isFirstLinkInput = false;
-      setElementFocus(anchors, currentLink);
-    } catch (error) {
-      alert('No links found');
-    }
-  }
-
-  function switchMark() {
-    try {
-      const { landmarks } = getLandmarks();
-      currentMark = arrayIterator(landmarks, currentMark, isFirstMarkInput);
-      isFirstMarkInput = false;
-      setElementFocus(landmarks, currentMark);
-    } catch (error) {
-      alert('No landmarks found');
-    }
-  }
+ 
+  // ========= double ended queue implementation =============
 
   document.addEventListener('keydown', (e) => {
     if (e.target.nodeName.toLowerCase() !== 'input') {
       switch (e.key) {
-        case 'h':
-          switchHeadings();
+        // case 'h':
+        //   switchHeadings();
+        //   break;
+        // case 'l':
+        //   switchLinks();
+        //   break;
+        // case 'm':
+        //   switchMark();
+        //   break;
+        
+        // double ended queue implementation
+        case 'q': 
+          doubleEndedSwitcher(deHeadings);
           break;
-        case 'l':
-          switchLinks();
+        case 'w':
+          doubleEndedSwitcher(deLinks);
           break;
-        case 'm':
-          switchMark();
+        case 'e':
+          doubleEndedSwitcher(deMarks);
+          break;
+        // double ended queue implementation
+
       }
     }
   });
