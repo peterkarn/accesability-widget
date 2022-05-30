@@ -32,6 +32,28 @@
     return keyMarks
   }
 
+  function injectStyles() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .focusable {
+        transition: transform 0.2s ease-in-out;
+        transform-origin: bottom left;
+      }
+
+      .focusable:focus-visible {
+        position: relative;
+        display: block;
+        outline: 5px solid yellow !important;
+        background: #0F60B6 !important;
+        color: #fff !important;
+        transform: scale(1.5);
+        z-index: 1000;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  injectStyles();
+
   function arrayIterator(arr, currentIndex, isFirstInput) {
 
     if (isReversed) {
